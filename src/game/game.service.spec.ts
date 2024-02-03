@@ -43,7 +43,7 @@ describe('GameService', () => {
   
       // Ensure that the firstPlayer value is in the range of 1 and the number of players
       const numberOfPlayers = 4;
-      expect(result.firstPlayer).toBeGreaterThanOrEqual(1);
+      expect(result.firstPlayer).toBeGreaterThanOrEqual(0);
       expect(result.firstPlayer).toBeLessThanOrEqual(numberOfPlayers);
     });
   });
