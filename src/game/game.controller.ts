@@ -3,16 +3,17 @@ import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { GameService } from './game.service';
 import { Response } from 'express';
 import { CheckMaraffaDto } from '../dto/checkMaraffa.dto';
+import { ComputeScoreDto } from '../dto/computeScore.dto';
 
 
 @Controller('games')
 export class GameController {
   constructor(private readonly gamesService: GameService) {}
 
-  @Get('startRound')  //returns the deck and the first player
   @ApiResponse({ status: 201, description: 'Round started' })
   @ApiResponse({ status: 417, description: 'Round failed to start' })
   @ApiOperation({ summary: 'Start a round' })
+  @Get('startRound')  //returns the deck and the first player
   startRound(@Res() res: Response) {
     const json = this.gamesService.startRound();
     if (json.firstPlayer == -1){ //4 denari not found
@@ -22,23 +23,21 @@ export class GameController {
     
   }
 
-  /*@Get('checkMaraffa/:user/:suit/:deck')  
-  @ApiResponse({ status: 200, description: 'Success' })
-  @ApiOperation({ summary: 'Check if the user has Maraffa' })
-  checkMaraffa( 
-  @Param('user') user: number,
-  @Param('suit') suit: number,
-  @Param('deck') deck: number[]) {
-    const maraffa = this.gamesService.checkMaraffa(user, suit, deck);
-    return maraffa; 
-  }*/
-
   @ApiResponse({ status: 201, description: 'Success' })
   @ApiOperation({ summary: 'Check if the user has Maraffa' })
   @Post('checkMaraffa') //returns true if the user has Maraffa
-  createGame(@Body() body: CheckMaraffaDto) {
+  checkMaraffa(@Body() body: CheckMaraffaDto) {
     const { user, suit, deck } = body;
     const maraffa = this.gamesService.checkMaraffa(user, suit, deck);
     return maraffa;
+  }
+
+  @ApiResponse({ status: 200, description: 'Success' })
+  @ApiOperation({ summary: 'Compute the score of the teams' })
+  @Post('computeScore') //returns the score of the teams 
+  computeScore(@Body() body: ComputeScoreDto) {
+    const { trick, trump } = body;
+    const json = this.gamesService.computeScore(trick, trump);
+    return json; 
   }
 }

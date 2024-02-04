@@ -15,7 +15,7 @@ export class GameService {
     return { deck: deck, firstPlayer: firstPlayer };
   }
 
-  checkMaraffa(userId, suit, deck) {
+  checkMaraffa(userId: number, suit: number, deck: number[]) {
     const utils = new CardsUtils();
     const idxA = utils.findCardIdx(userId, suit * 10 + 7, deck);
     const idx2 = utils.findCardIdx(userId, suit * 10 + 8, deck);
@@ -25,5 +25,15 @@ export class GameService {
       return true;
     }
     return false;
+  }
+
+  //is trump present? yes => find the highest trump
+  //no => find the suit of the first card highest card 
+  computeScore(trick: number[], trump: number) {
+    const utils = new CardsUtils();
+    let winningPosition = utils.isThereTrumpInTrick(trick, trump) ? utils.findHighestCardBySeed(trick, trump) : utils.findHighestCardBySeed(trick, utils.computeSeed(trick[0]));
+    let firstTeam = winningPosition % 2 == 0 ? true : false;
+    let score = trick.map(utils.computeValue).reduce((acc, val) => acc + val, 0);
+    return {score: score, firstTeam: firstTeam};
   }
 }
