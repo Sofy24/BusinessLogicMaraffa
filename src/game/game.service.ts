@@ -32,8 +32,8 @@ export class GameService {
   computeScore(trick: number[], trump: number) {
     const utils = new CardsUtils();
     let winningPosition = utils.isThereTrumpInTrick(trick, trump) ? utils.findHighestCardBySeed(trick, trump) : utils.findHighestCardBySeed(trick, utils.computeSeed(trick[0]));
-    let firstTeam = winningPosition % 2 == 0 ? true : false;
+    let firstTeam = winningPosition % 2 == 0;
     let score = trick.map(utils.computeValue).reduce((acc, val) => acc + val, 0);
-    return {score: score, firstTeam: firstTeam};
+    return {score, firstTeam, winningPosition};
   }
 }

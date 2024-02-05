@@ -28,16 +28,19 @@ export class GameController {
   @Post('checkMaraffa') //returns true if the user has Maraffa
   checkMaraffa(@Body() body: CheckMaraffaDto) {
     const { user, suit, deck } = body;
-    const maraffa = this.gamesService.checkMaraffa(user, suit, deck);
-    return maraffa;
+    return this.gamesService.checkMaraffa(user, suit, deck);
   }
 
-  @ApiResponse({ status: 200, description: 'Success' })
+  @ApiResponse({ status: 201, description: 'Success' })
+  @ApiResponse({ status: 417, description: 'Computation of score failed' })
   @ApiOperation({ summary: 'Compute the score of the teams' })
   @Post('computeScore') //returns the score of the teams 
-  computeScore(@Body() body: ComputeScoreDto) {
+  computeScore(@Res() res: Response, @Body() body: ComputeScoreDto) {
     const { trick, trump } = body;
-    const json = this.gamesService.computeScore(trick, trump);
-    return json; 
+    const json =  this.gamesService.computeScore(trick, trump);
+    if (json.winningPosition == -1){ 
+      return res.status(417).send({ message: 'Computation of score failed' });
+    }
+    return res.status(201).send(json);
   }
 }
