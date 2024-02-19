@@ -5,8 +5,6 @@ name: CI
 # Controls when the workflow will run
 on:
   workflow_call:
-  push:
-    branches: [ "feature/*" ]
   pull_request:
     branches: [ "main", "develop" ]
 
