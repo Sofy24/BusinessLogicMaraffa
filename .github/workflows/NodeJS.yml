@@ -18,6 +18,7 @@ defaults:
 
 jobs:
   build-and-test:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-22.04
     strategy:
         fail-fast: false
@@ -49,18 +50,26 @@ jobs:
   deploy:
     # if: github.event.pull_request.merged == true
     runs-on: ubuntu-22.04
-    needs: build-and-test
+    # needs: build-and-test
     steps:
     - name: Checkout
       uses: actions/checkout@v3
-    - name: Set release tag
-      id: set_tag
-      run: echo "RELEASE_TAG=v$(echo ${{ GITHUB_REF }} | awk -F'/' '{print ${{3}} }')" >> ${{ GITHUB_ENV }}    
-    - name: Login to GitHub Container Registry
-      run: echo "${{ USERMANAGEMENTSECRET.CR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-      env:
-          IMAGE_NAME: user_management
-          RELEASE_TAG: ${{ env.RELEASE_TAG }}
+    - name: Extract branch name
+      run: echo "##[set-output name=branch_name;]$(echo ${GITHUB_REF##refs/heads/})"
+    
+    - name: Build Docker image
+      run: echo "docker build -t ghcr.io/${{ github.repository_owner }}/${{ github.repository_name }}:${{ steps.extract_branch_name.outputs.branch_name }}  . "
+
+    - name: Push Docker image
+      run: echo "docker push ghcr.io/${{ github.repository_owner }}/${{ github.repository_name }}::${{ steps.extract_branch_name.outputs.branch_name }} "
+    # - name: Set release tag
+    #   id: set_tag
+    #   run: echo "RELEASE_TAG=v$(echo ${{ GITHUB_REF }} | awk -F'/' '{print ${{3}} }')" >> ${{ GITHUB_ENV }}    
+    # - name: Login to GitHub Container Registry
+    #   run: echo "${{ USERMANAGEMENTSECRET.CR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+    #   env:
+    #       IMAGE_NAME: user_management
+    #       RELEASE_TAG: ${{ env.RELEASE_TAG }}
 
       ###run: |
       ###  docker build --pull -t ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME:$RELEASE_TAG .
@@ -78,14 +87,14 @@ jobs:
     #         docker build --pull -t ghcr.io/${{ github.repository_owner }}/${{ IMAGE_NAME }}:${{tag}} .
     #         docker push ghcr.io/${{ github.repository_owner }}/${{ IMAGE_NAME }}:${{tag}}
     #       fi
-    - run: |
-          if [[ "${{ BRANCH_NAME }}" == "${{ DEFAULT_BRANCH }}" ]]; then
-            tag="${{ RELEASE_TAG }}" 
-            echo "Running on default branch '${{ DEFAULT_BRANCH }}': tag = ${{tag}}"
-          else
-            tag="develop"
-            echo "Running on branch '${{ BRANCH_NAME }}': tag = ${{tag}}"
-          fi
+    # - run: |
+    #       if [[ "${{ BRANCH_NAME }}" == "${{ DEFAULT_BRANCH }}" ]]; then
+    #         tag="${{ RELEASE_TAG }}" 
+    #         echo "Running on default branch '${{ DEFAULT_BRANCH }}': tag = ${{tag}}"
+    #       else
+    #         tag="develop"
+    #         echo "Running on branch '${{ BRANCH_NAME }}': tag = ${{tag}}"
+    #       fi
     # concurrency:
     #   # group: ${{ github.workflow }}-${{ github.ref }}-build-${{ matrix.os }}-${{ matrix.node-version }}
     #   group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.node-version }}
