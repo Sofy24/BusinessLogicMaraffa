@@ -17,7 +17,7 @@ defaults:
     shell: bash
 
 jobs:
-  build-and-test:
+  build:
     runs-on: ubuntu-22.04
     strategy:
         fail-fast: false
@@ -31,20 +31,38 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    # - name: Use Node.js ${{ matrix.node-version }}
-    #   uses: actions/setup-node@v3
-    #   with:
-    #     node-version: ${{ matrix.node-version }}
-    #     cache: 'yarn'
     - name: Run install
       uses: borales/actions-yarn@v3
       with:
         cmd: install # will run `yarn install` command
+    - name: Make a cache
+      uses: actions/cache@v2
+      id: restore-build
+      with:
+        path: ./*
+        key: ${{ github.sha }}
+
+
+
+  test:
+    runs-on: ubuntu-22.04
+    needs: build
+    strategy:
+        fail-fast: false
+        matrix:
+          # os: [ windows, macos, ubuntu ]
+          node-version: [18.x]
+    # concurrency: # group: ${{ github.workflow }}-${{ github.ref }}-build-${{ matrix.os }}-${{ matrix.node-version }}
+    #   group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.node-version }}
+    #   cancel-in-progress: true
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
     - name: Test
       uses: borales/actions-yarn@v3
       with:
-        cmd: test # will run `yarn test` command
-    - name: Make a cache
+        cmd: test
+    - name: Use cache
       uses: actions/cache@v2
       id: restore-build
       with:
@@ -53,7 +71,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-22.04
-    needs: build-and-test
+    needs: test
     permissions: write-all
     strategy:
       fail-fast: false
