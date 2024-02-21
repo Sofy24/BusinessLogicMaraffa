@@ -5,8 +5,8 @@ name: CI
 # Controls when the workflow will run
 on:
   workflow_call:
-  push:
-    branches: [ "main", "develop", "feature/*" ]
+  # push:
+  #   branches: [ "main", "develop", "feature/*" ]
   pull_request:
     branches: [ "main", "develop" ]
 
@@ -54,6 +54,7 @@ jobs:
   deploy:
     runs-on: ubuntu-22.04
     needs: build-and-test
+    permissions: write-all
     strategy:
       fail-fast: false
       matrix:
