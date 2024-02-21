@@ -5,6 +5,8 @@ name: CI
 # Controls when the workflow will run
 on:
   workflow_call:
+  push:
+    branches: [ "main", "develop", "feature/*" ]
   pull_request:
     branches: [ "main", "develop" ]
 
@@ -29,20 +31,25 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'yarn'
+    # - name: Use Node.js ${{ matrix.node-version }}
+    #   uses: actions/setup-node@v3
+    #   with:
+    #     node-version: ${{ matrix.node-version }}
+    #     cache: 'yarn'
     - name: Run install
-      uses: borales/actions-yarn@v4
+      uses: borales/actions-yarn@v3
       with:
         cmd: install # will run `yarn install` command
     - name: Test
-      uses: borales/actions-yarn@v4
+      uses: borales/actions-yarn@v3
       with:
-        cmd: test # will run `yarn install` command
-
+        cmd: test # will run `yarn test` command
+    - name: Make a cache
+      uses: actions/cache@v2
+      id: restore-build
+      with:
+        path: ./*
+        key: ${{ github.sha }}
 
   deploy:
     runs-on: ubuntu-22.04
@@ -55,11 +62,6 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'yarn'
     - name: Set project name 
       run: echo "REPOSITORY_NAME=business-logic-maraffa" >> $GITHUB_ENV # unused at the moment
     - name: Set build version
@@ -75,11 +77,17 @@ jobs:
       if: ${{ github.ref }} != 'refs/heads/main'
     - name: Set version with Develop
       run: echo "VERSION=develop" >> $GITHUB_ENV
-
+    - name: Use cache 
+      uses: actions/cache@v2
+      id: restore-build
+      with:
+        path: ./*
+        key: ${{ github.sha }}
+    - run: ls 
     - name: Build Docker image
       run: docker build -t ghcr.io/${{ env.IMAGE_NAME}}:${{ env.VERSION }}  .
     - name: Push Docker image
-      run: docker push --lowercase-tags ghcr.io/${{ env.IMAGE_NAME}}:${{ env.VERSION }} 
+      run: docker push ghcr.io/${{ env.IMAGE_NAME}}:${{ env.VERSION }} 
 
       #TODO not working yet
       # if: ${{ env.TAG_NAME }}
