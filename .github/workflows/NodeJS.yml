@@ -117,12 +117,12 @@ jobs:
     - name: Push Docker image
       run: docker push ghcr.io/${{ env.IMAGE_NAME}}:${{ env.VERSION }} 
 
-      #TODO not working yet
-      if: ${{ env.TAG_NAME }}
-    - name: Build Docker image
-      run: docker build -t ghcr.io//${{ env.IMAGE_NAME}}:${{ env.TAG_NAME }}  .
-    - name: Push Docker image
-      run: docker push ghcr.io//${{ env.IMAGE_NAME}}:${{ env.TAG_NAME }}
+    #   #TODO not working yet
+    #   if: ${{ env.TAG_NAME || false }}
+    # - name: Build Docker image
+    #   run: docker build -t ghcr.io//${{ env.IMAGE_NAME}}:${{ env.TAG_NAME }}  .
+    # - name: Push Docker image
+    #   run: docker push ghcr.io//${{ env.IMAGE_NAME}}:${{ env.TAG_NAME }}
 
 
   # success:
