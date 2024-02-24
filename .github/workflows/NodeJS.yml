@@ -120,9 +120,9 @@ jobs:
       #TODO not working yet
       if: ${{ env.TAG_NAME }}
     - name: Build Docker image
-      run: echo "docker build -t ghcr.io//${{ env.IMAGE_NAME}}:${{ env.TAG_NAME }}  . "
+      run: docker build -t ghcr.io//${{ env.IMAGE_NAME}}:${{ env.TAG_NAME }}  .
     - name: Push Docker image
-      run: echo "docker push ghcr.io//${{ env.IMAGE_NAME}}:${{ env.TAG_NAME }} "
+      run: docker push ghcr.io//${{ env.IMAGE_NAME}}:${{ env.TAG_NAME }}
 
 
   # success:
