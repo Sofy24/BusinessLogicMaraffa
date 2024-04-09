@@ -4,7 +4,7 @@ import { GameController } from './game.controller';
 
 
 @Module({
-  controllers: [GameController],
+  controllers: [GameController, ],
   providers: [GameService],
   imports: [GameModule],
 })
