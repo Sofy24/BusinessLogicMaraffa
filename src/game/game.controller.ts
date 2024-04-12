@@ -40,7 +40,7 @@ export class GameController {
   computeScore(@Res() res: Response, @Body() body: ComputeScoreDto) {
     const { trick, trump, mode, isSuitFinished } = body;
     let json;
-    switch(mode){
+    switch(mode.toLowerCase()){
       case 'classic': 
       json = this.classicService.computeScore(trick, trump);
       if (json.winningPosition == -1){ 
