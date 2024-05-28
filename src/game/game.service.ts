@@ -22,9 +22,10 @@ export class GameService {
     const idx3 = utils.findCardIdx(userId, suit * 10 + 9, deck);
 
     if (idxA != -1 && idx2 != -1 && idx3 != -1) {
-      return true;
+      return { maraffa: true};
     }
-    return false;
+    return { maraffa: false};
+  
   }
 
   computeScore(trick: number[], trump: number, isSuitFinished=[]) {

@@ -28,9 +28,9 @@ export class GameController {
   @ApiResponse({ status: 201, description: 'Success' })
   @ApiOperation({ summary: 'Check if the user has Maraffa' })
   @Post('checkMaraffa') //returns true if the user has Maraffa
-  checkMaraffa(@Body() body: CheckMaraffaDto) {
+  checkMaraffa(@Res() res: Response, @Body() body: CheckMaraffaDto) {
     const { user, suit, deck } = body;
-    return this.gamesService.checkMaraffa(user, suit, deck);
+    return res.status(201).send(this.gamesService.checkMaraffa(user, suit, deck));
   }
 
   @ApiResponse({ status: 201, description: 'Success' })
