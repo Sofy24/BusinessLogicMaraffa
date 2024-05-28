@@ -1,14 +1,16 @@
 import { Controller, Post, Body, Res, Get, Param } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { GameService } from './game.service';
+import { ClassicGameService } from '../classic_mode/game.service';
 import { Response } from 'express';
 import { CheckMaraffaDto } from '../dto/checkMaraffa.dto';
 import { ComputeScoreDto } from '../dto/computeScore.dto';
+import { ElevenZeroService } from '../eleven_to_zero_mode/game.service';
 
 
 @Controller('games')
 export class GameController {
-  constructor(private readonly gamesService: GameService) {}
+  constructor(private readonly gamesService: GameService, private readonly classicService: ClassicGameService, private readonly elevenzeroService: ElevenZeroService) {}
 
   @ApiResponse({ status: 201, description: 'Round started' })
   @ApiResponse({ status: 417, description: 'Round failed to start' })
@@ -26,9 +28,9 @@ export class GameController {
   @ApiResponse({ status: 201, description: 'Success' })
   @ApiOperation({ summary: 'Check if the user has Maraffa' })
   @Post('checkMaraffa') //returns true if the user has Maraffa
-  checkMaraffa(@Body() body: CheckMaraffaDto) {
+  checkMaraffa(@Res() res: Response, @Body() body: CheckMaraffaDto) {
     const { user, suit, deck } = body;
-    return this.gamesService.checkMaraffa(user, suit, deck);
+    return res.status(201).send(this.gamesService.checkMaraffa(user, suit, deck));
   }
 
   @ApiResponse({ status: 201, description: 'Success' })
@@ -36,10 +38,18 @@ export class GameController {
   @ApiOperation({ summary: 'Compute the score of the teams' })
   @Post('computeScore') //returns the score of the teams 
   computeScore(@Res() res: Response, @Body() body: ComputeScoreDto) {
-    const { trick, trump } = body;
-    const json =  this.gamesService.computeScore(trick, trump);
-    if (json.winningPosition == -1){ 
-      return res.status(417).send({ message: 'Computation of score failed' });
+    const { trick, trump, mode, isSuitFinished } = body;
+    let json;
+    switch(mode.toLowerCase()){
+      case 'classic': 
+      json = this.classicService.computeScore(trick, trump);
+      if (json.winningPosition == -1){ 
+        return res.status(417).send({ message: 'Computation of score failed' });
+      }
+      break;
+      case 'elevenzero': 
+      json =this.elevenzeroService.computeScore(trick, trump, isSuitFinished);
+      break;
     }
     return res.status(201).send(json);
   }

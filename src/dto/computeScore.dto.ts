@@ -5,4 +5,8 @@ export class ComputeScoreDto {
   trick: number[];
   @ApiProperty()
   trump: number;
+  @ApiProperty()
+  mode: string;
+  @ApiProperty()
+  isSuitFinished: boolean[];
 }

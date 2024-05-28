@@ -22,22 +22,13 @@ export class GameService {
     const idx3 = utils.findCardIdx(userId, suit * 10 + 9, deck);
 
     if (idxA != -1 && idx2 != -1 && idx3 != -1) {
-      return true;
+      return { maraffa: true};
     }
-    return false;
+    return { maraffa: false};
+  
   }
 
-  //is trump present? yes => find the highest trump
-  //no => find the suit of the first card highest card
-  computeScore(trick: number[], trump: number) {
-    const utils = new CardsUtils();
-    const winningPosition = utils.isThereTrumpInTrick(trick, trump)
-      ? utils.findHighestCardBySeed(trick, trump)
-      : utils.findHighestCardBySeed(trick, utils.computeSeed(trick[0]));
-    const firstTeam = winningPosition % 2 == 0;
-    const score = trick
-      .map(utils.computeValue)
-      .reduce((acc, val) => acc + val, 0);
-    return { score, firstTeam, winningPosition };
+  computeScore(trick: number[], trump: number, isSuitFinished=[]) {
+    throw new Error("Method 'computeScore' must be implemented by subclass");
   }
 }
