@@ -5,6 +5,4 @@ export class CheckMaraffaDto {
   deck: number[];
   @ApiProperty()
   suit: number;
-  @ApiProperty()
-  user: number;
 }

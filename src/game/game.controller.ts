@@ -29,8 +29,8 @@ export class GameController {
   @ApiOperation({ summary: 'Check if the user has Maraffa' })
   @Post('checkMaraffa') //returns true if the user has Maraffa
   checkMaraffa(@Res() res: Response, @Body() body: CheckMaraffaDto) {
-    const { user, suit, deck } = body;
-    return res.status(201).send(this.gamesService.checkMaraffa(user, suit, deck));
+    const { suit, deck } = body;
+    return res.status(201).send(this.gamesService.checkMaraffa(suit, deck));
   }
 
   @ApiResponse({ status: 201, description: 'Success' })
@@ -47,7 +47,7 @@ export class GameController {
         return res.status(417).send({ message: 'Computation of score failed' });
       }
       break;
-      case 'elevenzero': 
+      case 'eleven2zero': 
       json =this.elevenzeroService.computeScore(trick, trump, isSuitFinished);
       break;
     }
