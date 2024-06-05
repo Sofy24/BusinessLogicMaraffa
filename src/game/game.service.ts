@@ -15,11 +15,11 @@ export class GameService {
     return { deck: deck, firstPlayer: firstPlayer };
   }
 
-  checkMaraffa(userId: number, suit: number, deck: number[]) {
+  checkMaraffa(suit: number, deck: number[]) {
     const utils = new CardsUtils();
-    const idxA = utils.findCardIdx(userId, suit * 10 + 7, deck);
-    const idx2 = utils.findCardIdx(userId, suit * 10 + 8, deck);
-    const idx3 = utils.findCardIdx(userId, suit * 10 + 9, deck);
+    const idxA = utils.findCardIdx(suit * 10 + 7, deck);
+    const idx2 = utils.findCardIdx(suit * 10 + 8, deck);
+    const idx3 = utils.findCardIdx(suit * 10 + 9, deck);
 
     if (idxA != -1 && idx2 != -1 && idx3 != -1) {
       return { maraffa: true};

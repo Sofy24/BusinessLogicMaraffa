@@ -1,9 +1,8 @@
 const numberOfCardsPerPlayer = 10;
 export class CardsUtils {
     //returns the index of the card if the user has the specific card. Otherwise returns -1
-    findCardIdx(userId: number, card: number, deck: number[]) {
-        var cardIdx = deck.slice(userId * numberOfCardsPerPlayer, (userId + 1) * numberOfCardsPerPlayer).indexOf(card);
-        return cardIdx == -1 ? cardIdx : cardIdx + numberOfCardsPerPlayer * userId;
+    findCardIdx(card: number, deck: number[]) {
+        return deck.indexOf(card);
     }
 
     //find the owner of the card
