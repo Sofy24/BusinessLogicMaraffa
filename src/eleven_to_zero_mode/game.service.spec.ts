@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ElevenZeroService } from '../eleven_to_zero_mode/game.service';
-import { CardsUtils } from '../utils/cardsFunctions';
 
 describe('GameService', () => {
   let service: ElevenZeroService;
@@ -25,7 +24,7 @@ describe('GameService', () => {
          11, 23, 13, 26, 16, 29, 5, 25, 15, 12,
          36, 7, 31, 35, 34, 32, 18, 10, 17,
         8, 1, 4, 0, 24, 20, 38, 30, 2, 3, 22];*/
-      const isSuitFinished = [true, true, true, true];  
+      const isSuitFinished = [true, true, true, true];
       const expectedTrickScore = 6;
       const expectedWinningPosition = 0;
       const result = service.computeScore(trick, trump, isSuitFinished);
@@ -41,7 +40,7 @@ describe('GameService', () => {
          11, 23, 13, 26, 16, 29, 5, 25, 15, 12,
          36, 7, 31, 35, 34, 32, 18, 10, 17,
         8, 1, 4, 0, 24, 20, 38, 30, 2, 3, 22];*/
-      const isSuitFinished = [false, false, true, true]; 
+      const isSuitFinished = [false, false, true, true];
       const expectedTrickScore = 6;
       const expectedWinningPosition = 1;
       const result = service.computeScore(trick, trump, isSuitFinished);
@@ -57,7 +56,7 @@ describe('GameService', () => {
         11, 23, 13, 26, 16, 29, 5, 25, 15, 12,
         36, 7, 31, 35, 34, 32, 18, 10, 17,
        8, 1, 4, 0, 24, 20, 38, 30, 2, 3, 22];*/
-       const isSuitFinished = [false, false, false, false]; 
+      const isSuitFinished = [false, false, false, false];
       const expectedTrickScore = 6;
       const expectedWinningPosition = 2;
       const result = service.computeScore(trick, trump, isSuitFinished);
@@ -89,7 +88,7 @@ describe('GameService', () => {
         11, 23, 13, 26, 16, 29, 9, 25, 15, 12,
         36, 7, 31, 6, 34, 32, 18, 10, 17,
        8, 1, 4, 0, 24, 20, 38, 30, 2, 3, 22];*/
-      const isSuitFinished = [false, false, false, false]; 
+      const isSuitFinished = [false, false, false, false];
       const expectedTrickScore = 4;
       const expectedWinningPosition = 1;
       const result = service.computeScore(trick, trump, isSuitFinished);
@@ -98,7 +97,7 @@ describe('GameService', () => {
       expect(result.winningPosition).toBe(expectedWinningPosition);
     });
 
-    it("should compute 11 to 0 because a player of the first team played the wrong suit", () => {
+    it('should compute 11 to 0 because a player of the first team played the wrong suit', () => {
       const trump = 2;
       const trick = [5, 9, 36, 4];
       /*const deck = [19, 39, 33, 27, 14, 28, 37, 21, 5, 35,
@@ -112,18 +111,79 @@ describe('GameService', () => {
       expect(result.firstTeam).toBe(true);
     });
 
-    it("should compute 11 to 0 because a player of the second team played the wrong suit", () => {
+    it('should compute 11 to 0 because a player of the second team played the wrong suit', () => {
       const trump = 2;
       const trick = [5, 29, 6, 4];
       /*const deck = [19, 39, 33, 27, 14, 28, 37, 21, 5, 35,
         11, 23, 13, 26, 16, 29, 9, 25, 15, 12,
         36, 7, 31, 6, 34, 32, 18, 10, 17,
        8, 1, 4, 0, 24, 20, 38, 30, 2, 3, 22];*/
-      const isSuitFinished = [false, false, false, false]; 
+      const isSuitFinished = [false, false, false, false];
       const expectedTrickScore = 11;
       const result = service.computeScore(trick, trump, isSuitFinished);
       expect(result.score).toBe(expectedTrickScore);
       expect(result.firstTeam).toBe(false);
     });
+
+    it('should compute play card: user replied correct suit', () => {
+      const trump = 2;
+      const trick = [5];
+      /*const deck = [19, 39, 33, 27, 14, 28, 37, 21, 5, 35,
+        11, 23, 13, 26, 16, 29, 9, 25, 15, 12,
+        36, 7, 31, 6, 34, 32, 18, 10, 17,
+       8, 1, 4, 0, 24, 20, 38, 30, 2, 3, 22];*/
+      const result = service.checkPlayCard(
+        trick,
+        6,
+        [6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+        false,
+      );
+      expect(result.valid).toBe(true);
+    });
+  });
+
+  it('should compute play card: user replied wrong suit', () => {
+    const trump = 2;
+    const trick = [5];
+    /*const deck = [19, 39, 33, 27, 14, 28, 37, 21, 5, 35,
+        11, 23, 13, 26, 16, 29, 9, 25, 15, 12,
+        36, 7, 31, 6, 34, 32, 18, 10, 17,
+       8, 1, 4, 0, 24, 20, 38, 30, 2, 3, 22];*/
+    const result = service.checkPlayCard(
+      trick,
+      22,
+      [6, 7, 8, 9, 10, 11, 12, 13, 14, 22],
+      false,
+    );
+    expect(result.valid).toBe(false);
+  });
+  it('should compute play card: user replied wrong suit but is trump and has no card of that suit', () => {
+    const trick = [30];
+    /*const deck = [19, 39, 33, 27, 14, 28, 37, 21, 5, 35,
+        11, 23, 13, 26, 16, 29, 9, 25, 15, 12,
+        36, 7, 31, 6, 34, 32, 18, 10, 17,
+       8, 1, 4, 0, 24, 20, 38, 30, 2, 3, 22];*/
+    const result = service.checkPlayCard(
+      trick,
+      22,
+      [6, 7, 8, 9, 10, 11, 12, 13, 14, 22],
+      true,
+    );
+    expect(result.valid).toBe(true);
+  });
+
+  it('should compute play card: user replied wrong suit but is trump and has card of that suit', () => {
+    const trick = [30];
+    /*const deck = [19, 39, 33, 27, 14, 28, 37, 21, 5, 35,
+        11, 23, 13, 26, 16, 29, 9, 25, 15, 12,
+        36, 7, 31, 6, 34, 32, 18, 10, 17,
+       8, 1, 4, 0, 24, 20, 38, 30, 2, 3, 22];*/
+    const result = service.checkPlayCard(
+      trick,
+      22,
+      [6, 7, 8, 9, 10, 31, 12, 13, 14, 22],
+      true,
+    );
+    expect(result.valid).toBe(false);
   });
 });
