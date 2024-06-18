@@ -19,25 +19,7 @@ export class ElevenZeroService extends GameService {
     return { elevenZero, firstTeam };
   }
 
-  checkPlayCard(
-    trick: number[],
-    card: number,
-    userCards: number[],
-    cardIsTrump: boolean,
-  ) {
-    const utils = new CardsUtils();
-    if (trick.length == 0) return { valid: true };
-    const firstCardSuit = utils.computeSeed(trick[0]);
-    const cardSuit = utils.computeSeed(card);
-    return {
-      valid:
-        firstCardSuit === cardSuit ||
-        (firstCardSuit === cardSuit && cardIsTrump) ||
-        !userCards
-          .map((userCard) => utils.computeSeed(userCard))
-          .includes(firstCardSuit),
-    };
-  }
+
   //is trump present? yes => find the highest trump
   //no => find the suit of the first card highest card
   //Moreover, check if the player played a wrong suit

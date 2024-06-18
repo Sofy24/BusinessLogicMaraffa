@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CardsUtils } from '../utils/cardsFunctions';
 import { GameService } from '../game/game.service';
+import { CardsUtils } from '../utils/cardsFunctions';
 
 @Injectable()
 export class ClassicGameService extends GameService {
