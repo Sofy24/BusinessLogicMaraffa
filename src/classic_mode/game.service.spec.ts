@@ -1,7 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClassicGameService } from './game.service';
-import { RandomCards } from '../utils/random';
-import { CardsUtils } from 'src/utils/cardsFunctions';
 
 describe('GameService', () => {
   let service: ClassicGameService;
@@ -62,5 +60,4 @@ describe('GameService', () => {
       expect(result.firstTeam).toBe(false);
       expect(result.winningPosition).toBe(expectedWinningPosition);
     });
-  });
 });

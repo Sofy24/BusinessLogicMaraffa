@@ -1,7 +1,7 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { RandomCards } from '../utils/random';
-import { numberOfCardsPerPlayer } from '../utils/constant';
+import { Injectable } from '@nestjs/common';
 import { CardsUtils } from '../utils/cardsFunctions';
+import { numberOfCardsPerPlayer } from '../utils/constant';
+import { RandomCards } from '../utils/random';
 
 @Injectable()
 export class GameService {
@@ -22,13 +22,27 @@ export class GameService {
     const idx3 = utils.findCardIdx(suit * 10 + 9, deck);
 
     if (idxA != -1 && idx2 != -1 && idx3 != -1) {
-      return { maraffa: true};
+      return { maraffa: true };
     }
-    return { maraffa: false};
-  
+    return { maraffa: false };
   }
-
-  computeScore(trick: number[], trump: number, isSuitFinished=[]) {
-    throw new Error("Method 'computeScore' must be implemented by subclass");
+  checkPlayCard(
+    trick: number[],
+    card: number,
+    userCards: number[],
+    cardIsTrump: boolean,
+  ) {
+    const utils = new CardsUtils();
+    if (trick.length == 0) return { valid: true };
+    const firstCardSuit = utils.computeSeed(trick[0]);
+    const cardSuit = utils.computeSeed(card);
+    return {
+      valid:
+        firstCardSuit === cardSuit ||
+        (firstCardSuit === cardSuit && cardIsTrump) ||
+        !userCards
+          .map((userCard) => utils.computeSeed(userCard))
+          .includes(firstCardSuit),
+    };
   }
 }
