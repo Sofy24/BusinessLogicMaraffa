@@ -60,4 +60,5 @@ describe('GameService', () => {
       expect(result.firstTeam).toBe(false);
       expect(result.winningPosition).toBe(expectedWinningPosition);
     });
+  });
 });
