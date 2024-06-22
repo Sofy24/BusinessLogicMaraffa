@@ -124,5 +124,5 @@ describe('GameService', () => {
       expect(result.score).toBe(expectedTrickScore);
       expect(result.firstTeam).toBe(false);
     });
-
+  });
 });
