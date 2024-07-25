@@ -112,6 +112,14 @@ jobs:
         run: docker build -t ghcr.io/${{ env.IMAGE_NAME}}:${{ env.VERSION }}  .
       - name: Push Docker image
         run: docker push ghcr.io/${{ env.IMAGE_NAME}}:${{ env.VERSION }}
+      - name: Build Docker image with tag
+        run: |
+          if [ "${{ github.event.release.tag_name }}" != '' ]; then
+            docker build -t ghcr.io/${{ env.IMAGE_NAME}}:${{ env.TAG_NAME }}  .
+            docker push ghcr.io/${{ env.IMAGE_NAME}}:${{ env.TAG_NAME }}
+          fi 
+      - name: Extract tag name
+        run: echo "TAG_NAME=raspi" >> $GITHUB_ENV
       - name: Set up Docker Buildx
         run: |
           docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
@@ -121,10 +129,3 @@ jobs:
         run: docker buildx build -f Dockerfile.raspi -t ghcr.io/${{ env.IMAGE_NAME}}:raspi  .
       - name: Push Docker image raspberry
         run: docker push ghcr.io/${{ env.IMAGE_NAME}}:raspi
-
-      - name: Build Docker image with tag
-        run: |
-          if [ "${{ github.event.release.tag_name }}" != '' ]; then
-            docker build -t ghcr.io/${{ env.IMAGE_NAME}}:${{ env.TAG_NAME }}  .
-            docker push ghcr.io/${{ env.IMAGE_NAME}}:${{ env.TAG_NAME }}
-          fi 
