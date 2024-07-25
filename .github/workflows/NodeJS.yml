@@ -112,6 +112,15 @@ jobs:
         run: docker build -t ghcr.io/${{ env.IMAGE_NAME}}:${{ env.VERSION }}  .
       - name: Push Docker image
         run: docker push ghcr.io/${{ env.IMAGE_NAME}}:${{ env.VERSION }}
+      - name: Set up Docker Buildx
+        run: |
+          docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+          docker buildx create --use --name builder
+          docker buildx inspect --bootstrap
+      - name: Build Docker image raspberry
+        run: docker buildx build -f Dockerfile.raspi -t ghcr.io/${{ env.IMAGE_NAME}}:raspi  .
+      - name: Push Docker image raspberry
+        run: docker push ghcr.io/${{ env.IMAGE_NAME}}:raspi
 
       - name: Build Docker image with tag
         run: |
