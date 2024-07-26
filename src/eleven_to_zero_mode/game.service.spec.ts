@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ElevenZeroService } from '../eleven_to_zero_mode/game.service';
 
+export const ELEVENZEROPOINTS = 33;
 describe('GameService', () => {
   let service: ElevenZeroService;
 
@@ -105,7 +106,7 @@ describe('GameService', () => {
         36, 7, 31, 6, 34, 32, 18, 10, 17,
        8, 1, 4, 0, 24, 20, 38, 30, 2, 3, 22];*/
       const isSuitFinished = [false, false, false, false];
-      const expectedTrickScore = 11;
+      const expectedTrickScore = ELEVENZEROPOINTS;
       const result = service.computeScore(trick, trump, isSuitFinished);
       expect(result.score).toBe(expectedTrickScore);
       expect(result.firstTeam).toBe(true);
@@ -119,7 +120,7 @@ describe('GameService', () => {
         36, 7, 31, 6, 34, 32, 18, 10, 17,
        8, 1, 4, 0, 24, 20, 38, 30, 2, 3, 22];*/
       const isSuitFinished = [false, false, false, false];
-      const expectedTrickScore = 11;
+      const expectedTrickScore = ELEVENZEROPOINTS;
       const result = service.computeScore(trick, trump, isSuitFinished);
       expect(result.score).toBe(expectedTrickScore);
       expect(result.firstTeam).toBe(false);
