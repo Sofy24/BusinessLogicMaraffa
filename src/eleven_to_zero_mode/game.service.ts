@@ -19,7 +19,6 @@ export class ElevenZeroService extends GameService {
     return { elevenZero, firstTeam };
   }
 
-
   //is trump present? yes => find the highest trump
   //no => find the suit of the first card highest card
   //Moreover, check if the player played a wrong suit
