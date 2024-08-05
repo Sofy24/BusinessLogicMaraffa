@@ -5,4 +5,8 @@ export class CheckMaraffaDto {
   deck: number[];
   @ApiProperty()
   suit: number;
+  @ApiProperty()
+  value: number;
+  @ApiProperty()
+  trump: number;
 }
