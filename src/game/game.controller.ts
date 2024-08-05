@@ -33,8 +33,10 @@ export class GameController {
   @ApiOperation({ summary: 'Check if the user has Maraffa' })
   @Post('checkMaraffa') //returns true if the user has Maraffa
   checkMaraffa(@Res() res: Response, @Body() body: CheckMaraffaDto) {
-    const { suit, deck } = body;
-    return res.status(201).send(this.gamesService.checkMaraffa(suit, deck));
+    const { suit, deck, trump, value } = body;
+    return res
+      .status(201)
+      .send(this.gamesService.checkMaraffa(suit, deck, value, trump));
   }
 
   @ApiResponse({ status: 201, description: 'Validation' })

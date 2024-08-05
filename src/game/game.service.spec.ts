@@ -57,7 +57,7 @@ describe('GameService', () => {
       for (let i = 0; i < 10; i++) {
         deck.push(i);
       }
-      const result = service.checkMaraffa(suit, deck);
+      const result = service.checkMaraffa(suit, deck, 7, 0);
 
       expect(result.maraffa).toBe(true);
     });
@@ -65,7 +65,7 @@ describe('GameService', () => {
     it('should return false if any of the three cards is missing from the deck', () => {
       const suit = 1;
       const deck = [19, 39, 33, 27, 14, 28, 37, 21, 9, 11];
-      const result = service.checkMaraffa(suit, deck);
+      const result = service.checkMaraffa(suit, deck, 7, 1);
 
       expect(result.maraffa).toBe(false);
     });

@@ -15,8 +15,10 @@ export class GameService {
     return { deck: deck, firstPlayer: firstPlayer };
   }
 
-  checkMaraffa(suit: number, deck: number[]) {
+  checkMaraffa(suit: number, deck: number[], value: number, trump: number) {
     const utils = new CardsUtils();
+    if (trump != suit || utils.computeValue(value) != 3)
+      return { maraffa: false };
     const idxA = utils.findCardIdx(suit * 10 + 7, deck);
     const idx2 = utils.findCardIdx(suit * 10 + 8, deck);
     const idx3 = utils.findCardIdx(suit * 10 + 9, deck);
