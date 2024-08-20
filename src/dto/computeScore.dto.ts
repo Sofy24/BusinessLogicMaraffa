@@ -8,5 +8,7 @@ export class ComputeScoreDto {
   @ApiProperty()
   mode: string;
   @ApiProperty()
+  teamACards: number[];
+  @ApiProperty()
   isSuitFinished: boolean[];
 }

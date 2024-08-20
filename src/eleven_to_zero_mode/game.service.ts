@@ -22,7 +22,12 @@ export class ElevenZeroService extends GameService {
   //is trump present? yes => find the highest trump
   //no => find the suit of the first card highest card
   //Moreover, check if the player played a wrong suit
-  computeScore(trick: number[], trump: number, isSuitFinished: boolean[]) {
+  computeScore(
+    trick: number[],
+    teamACards: number[],
+    trump: number,
+    isSuitFinished: boolean[],
+  ) {
     const result = this.checkElevenZero(trick, isSuitFinished);
     const firstTeam = result.firstTeam;
     if (result.elevenZero) {
@@ -32,7 +37,7 @@ export class ElevenZeroService extends GameService {
       const winningPosition = utils.isThereTrumpInTrick(trick, trump)
         ? utils.findHighestCardBySeed(trick, trump)
         : utils.findHighestCardBySeed(trick, utils.computeSeed(trick[0]));
-      const firstTeam = winningPosition % 2 == 0;
+      const firstTeam = teamACards.includes(trick[winningPosition]);
       const score = trick
         .map(utils.computeValue)
         .reduce((acc, val) => acc + val, 0);
