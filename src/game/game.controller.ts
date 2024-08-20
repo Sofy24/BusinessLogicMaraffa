@@ -59,11 +59,11 @@ export class GameController {
   @ApiOperation({ summary: 'Compute the score of the teams' })
   @Post('computeScore') //returns the score of the teams
   computeScore(@Res() res: Response, @Body() body: ComputeScoreDto) {
-    const { trick, trump, mode, isSuitFinished } = body;
+    const { trick, trump, teamACards, mode, isSuitFinished } = body;
     let json;
     switch (mode.toLowerCase()) {
       case 'classic':
-        json = this.classicService.computeScore(trick, trump);
+        json = this.classicService.computeScore(trick, teamACards, trump);
         if (json.winningPosition == -1) {
           return res
             .status(417)
@@ -73,6 +73,7 @@ export class GameController {
       case 'eleven2zero':
         json = this.elevenzeroService.computeScore(
           trick,
+          teamACards,
           trump,
           isSuitFinished,
         );
