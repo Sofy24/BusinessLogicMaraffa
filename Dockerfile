@@ -24,4 +24,4 @@ COPY --from=base /app/dist /app/dist
 
 EXPOSE 3000
  
-CMD ["node","dist/main.js"]
+CMD ["node", "--require", "./dist/tracing.js", "dist/main.js"]
