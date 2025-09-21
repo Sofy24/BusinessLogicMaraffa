@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -13,6 +13,9 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
   app.enableCors();
+  console.log(
+    `🔍 Traces are being sent to: ${process.env.OTEL_EXPORTER_OTLP_ENDPOINT}`,
+  );
   await app.listen(process.env.PORT || 3000);
 }
 bootstrap();
