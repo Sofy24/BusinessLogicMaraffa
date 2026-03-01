@@ -5,7 +5,7 @@
   "description": "Nest TypeScript starter repository",
   "license": "MIT",
   "scripts": {
-    "build": "nest build && cp src/tracing.ts dist/tracing.js",  
+    "build": "nest build && cp src/tracing.ts dist/tracing.js",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
@@ -30,6 +30,8 @@
     "@opentelemetry/instrumentation-express": "^0.34.1",
     "@opentelemetry/instrumentation-http": "^0.45.1",
     "@opentelemetry/sdk-node": "^0.45.1",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.3",
     "electron": "^28.2.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",

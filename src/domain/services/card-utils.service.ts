@@ -1,22 +1,21 @@
-const numberOfCardsPerPlayer = 10;
+import { Injectable } from '@nestjs/common';
+import { numberOfCardsPerPlayer } from '../constants';
+
+@Injectable()
 export class CardsUtils {
-  //returns the index of the card if the user has the specific card. Otherwise returns -1
   findCardIdx(card: number, deck: number[]) {
     return deck.indexOf(card);
   }
 
-  //find the owner of the card
   findCardOwner(card: number, deck: number[]) {
     const cardIdx = deck.indexOf(card);
     return Math.floor(cardIdx / numberOfCardsPerPlayer);
   }
 
-  //compute the seed
   computeSeed(a: number) {
     return Math.floor(a / numberOfCardsPerPlayer);
   }
 
-  //compute the value of the cards
   computeValue(a: number) {
     return a % numberOfCardsPerPlayer < 4
       ? 0
@@ -25,12 +24,10 @@ export class CardsUtils {
       : 1;
   }
 
-  //returns true if there's at least one trump card
   isThereTrumpInTrick(trick: number[], trump: number) {
     return trick.some((c) => this.computeSeed(c) == trump) ? true : false;
   }
 
-  //find the highest card by given suit. Returns the index of that card in the trick
   findHighestCardBySeed(trick: number[], suit: number) {
     const maxNumber: number = Math.max(
       ...trick.filter((c) => this.computeSeed(c) == suit),
@@ -38,7 +35,6 @@ export class CardsUtils {
     return trick.indexOf(maxNumber);
   }
 
-  //check if a user has a seed
   isSeedOnHand(
     userId: number,
     deck: number[],
@@ -55,7 +51,6 @@ export class CardsUtils {
     return false;
   }
 
-  //find the card it takes (between 2 of which the first command)
   winCard(firstCard: number, secondCard: number, trump: number) {
     if (
       this.computeSeed(firstCard) == this.computeSeed(secondCard) &&
@@ -70,7 +65,6 @@ export class CardsUtils {
     return false;
   }
 
-  //sort cards in each player’s hand
   partialSort4(deck: number[]) {
     const ris = [];
     for (let i = 0; i < 4; i++) {

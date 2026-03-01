@@ -1,17 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { GameService } from '../game/game.service';
-import { CardsUtils } from '../utils/cardsFunctions';
-import { elevenZeroPoints } from '../utils/constant';
+import { elevenZeroPoints } from '../../constants';
+import { CardsUtils } from '../card-utils.service';
+import { IGameRules } from './game-rules.interface';
 
 @Injectable()
-export class ElevenZeroService extends GameService {
+export class ElevenZeroService implements IGameRules {
+  constructor(private readonly utils: CardsUtils) {}
+
   /**check if a player played a wrong suit */
   checkElevenZero(trick: number[], isSuitFinished: boolean[]) {
-    const utils = new CardsUtils();
-    const firstCardSuit = utils.computeSeed(trick[0]);
+    const firstCardSuit = this.utils.computeSeed(trick[0]);
     const differentSuit = isSuitFinished.map(
       (suit, index) =>
-        suit == false && utils.computeSeed(trick[index]) != firstCardSuit,
+        suit == false && this.utils.computeSeed(trick[index]) != firstCardSuit,
     );
     const index = differentSuit.findIndex((val) => val == true);
     const firstTeam = index % 2 == 0;
@@ -33,13 +34,15 @@ export class ElevenZeroService extends GameService {
     if (result.elevenZero) {
       return { score: elevenZeroPoints, firstTeam, winningPosition: -1 };
     } else {
-      const utils = new CardsUtils();
-      const winningPosition = utils.isThereTrumpInTrick(trick, trump)
-        ? utils.findHighestCardBySeed(trick, trump)
-        : utils.findHighestCardBySeed(trick, utils.computeSeed(trick[0]));
+      const winningPosition = this.utils.isThereTrumpInTrick(trick, trump)
+        ? this.utils.findHighestCardBySeed(trick, trump)
+        : this.utils.findHighestCardBySeed(
+            trick,
+            this.utils.computeSeed(trick[0]),
+          );
       const firstTeam = teamACards.includes(trick[winningPosition]);
       const score = trick
-        .map(utils.computeValue)
+        .map((c) => this.utils.computeValue(c))
         .reduce((acc, val) => acc + val, 0);
       return { score, firstTeam, winningPosition };
     }
