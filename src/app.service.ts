@@ -3,9 +3,7 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class AppService {
   private isReady = true; // Inizializza come ready per i container check
-  private isStarted = true;
-
-     /**
+  /**
    * Controlla se l'applicazione è pronta a ricevere traffico
    * Deve essere veloce per i container healthcheck
    */
@@ -40,9 +38,6 @@ export class AppService {
     }
   }
 
-  /**
-   * Restituisce metriche di sistema per il monitoring
-   */
   getSystemMetrics() {
     const memUsage = process.memoryUsage();
 
@@ -61,14 +56,8 @@ export class AppService {
     };
   }
 
-  /**
-   * Graceful shutdown handler
-   */
   async shutdown(): Promise<void> {
     this.isReady = false;
-    this.isStarted = false;
-
-    // TODO: Chiudi connessioni database, cache, etc.
     console.log('Application shutting down gracefully');
   }
 }

@@ -1,14 +1,19 @@
-import { Body, Controller, Get, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Post, Res } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Response } from 'express';
-import { GameRulesService } from '../../../application/use-cases/game-rules.service';
+import {
+  GAME_RULES_PORT,
+  IGameRulesPort,
+} from '../../../domain/ports/inbound/game-rules.port';
 import { CheckMaraffaDto } from '../dto/check-maraffa.dto';
 import { ComputeScoreDto } from '../dto/compute-score.dto';
 import { PlayCardValidationDto } from '../dto/play-card-validation.dto';
 
 @Controller('games')
 export class GameController {
-  constructor(private readonly gameRules: GameRulesService) {}
+  constructor(
+    @Inject(GAME_RULES_PORT) private readonly gameRules: IGameRulesPort,
+  ) {}
 
   @ApiResponse({ status: 201, description: 'Round started' })
   @ApiResponse({ status: 417, description: 'Round failed to start' })

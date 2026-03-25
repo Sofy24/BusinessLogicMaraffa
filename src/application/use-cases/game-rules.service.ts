@@ -4,15 +4,10 @@ import { CardsUtils } from '../../domain/services/card-utils.service';
 import { RandomCards } from '../../domain/services/deck-shuffle.service';
 import { ClassicGameService } from '../../domain/services/rules/classic.rules.service';
 import { ElevenZeroService } from '../../domain/services/rules/eleven-to-zero.rules.service';
-import { IGameRulesPort } from '../ports/inbound/game-rules.port';
-
-export interface ComputeScoreInput {
-  trick: number[];
-  trump: number;
-  mode: string;
-  teamACards: number[];
-  isSuitFinished: boolean[];
-}
+import {
+  ComputeScoreInput,
+  IGameRulesPort,
+} from '../../domain/ports/inbound/game-rules.port';
 
 @Injectable()
 export class GameRulesService implements IGameRulesPort {

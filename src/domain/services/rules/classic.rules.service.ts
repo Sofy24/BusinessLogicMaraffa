@@ -11,7 +11,10 @@ export class ClassicGameService implements IGameRules {
   computeScore(trick: number[], teamACards: number[], trump: number) {
     const winningPosition = this.utils.isThereTrumpInTrick(trick, trump)
       ? this.utils.findHighestCardBySeed(trick, trump)
-      : this.utils.findHighestCardBySeed(trick, this.utils.computeSeed(trick[0]));
+      : this.utils.findHighestCardBySeed(
+          trick,
+          this.utils.computeSeed(trick[0]),
+        );
     const firstTeam = teamACards.includes(trick[winningPosition]);
     const score = trick
       .map((c) => this.utils.computeValue(c))

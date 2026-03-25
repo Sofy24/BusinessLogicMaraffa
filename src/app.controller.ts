@@ -7,7 +7,7 @@ import { AppService } from './app.service';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-   // Rotta principale per healthcheck del container
+  // Rotta principale per healthcheck del container
   @Get('health')
   getHealth(@Res() res: Response) {
     const healthCheck = {
@@ -95,6 +95,12 @@ export class AppController {
     }
   }
 
+  // Metrics endpoint
+  @Get('actuator/metrics')
+  getMetrics(@Res() res: Response) {
+    res.status(HttpStatus.OK).json(this.appService.getSystemMetrics());
+  }
+
   // Info endpoint - stile Spring Boot
   @Get('actuator/info')
   getInfo(@Res() res: Response) {
@@ -137,5 +143,4 @@ export class AppController {
       pid: process.pid,
     };
   }
-
 }
